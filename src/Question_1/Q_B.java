@@ -1,3 +1,5 @@
+package Question_1;
+
 public class Q_B {
     public static int minTimeToBuildEngines(int[] engines, int splitCost) {
         return buildEngines(engines, splitCost, 0, engines.length);
