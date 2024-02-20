@@ -123,7 +123,7 @@ public class HomeUI extends JFrame {
                 SocialGraph socialGraph = new SocialGraph();
                 DbConnection database = new DbConnection();
                 HomeUI home = new HomeUI();
-                home.initialize("binu", socialGraph);
+                home.initialize("User", socialGraph);
             }
         });
     }
