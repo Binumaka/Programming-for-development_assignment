@@ -1,102 +1,67 @@
 package Question_4;
 
 import java.util.*;
-
+ 
 public class Q_A {
-    
-    // Class to represent a state in the maze
-    static class State {
-        int x;
-        int y;
-        int keys;
-        
-        public State(int x, int y, int keys) {
-            this.x = x;
-            this.y = y;
-            this.keys = keys;
+    private static final int[][] DELTAS = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+ 
+    public int shortestPath(String[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        int[][] dist = new int[m][n];
+        for (int[] row : dist) {
+            Arrays.fill(row, Integer.MAX_VALUE);
         }
-    }
-    
-    public static int shortestPathAllKeys(String[] grid) {
-        int m = grid.length;
-        int n = grid[0].length();
-        int allKeys = 0;
-        
-        // Find the starting position and count the number of keys
-        int startX = 0, startY = 0;
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                char cell = grid[i].charAt(j);
-                if (cell == 'S') {
-                    startX = i;
-                    startY = j;
-                } else if (cell >= 'a' && cell <= 'f') {
-                    allKeys |= 1 << (cell - 'a');
-                }
-            }
-        }
-        
-        // Initialize visited set and queue for BFS
-        Set<String> visited = new HashSet<>();
-        Queue<State> queue = new LinkedList<>();
-        
-        // Add the starting state to the queue
-        queue.offer(new State(startX, startY, 0));
-        visited.add(startX + "," + startY + ",0");
-        
-        // Directions for movement: up, down, left, right
-        int[][] dirs = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-        int steps = 0;
-        
+        Set<Character> keys = new HashSet<>();
+        Deque<int[]> queue = new ArrayDeque<>();
+        queue.addLast(findStart(grid));
+        dist[0][0] = 0;
         while (!queue.isEmpty()) {
-            int size = queue.size();
-            for (int i = 0; i < size; i++) {
-                State state = queue.poll();
-                int x = state.x;
-                int y = state.y;
-                int keys = state.keys;
-                
-                // Check if all keys are collected
-                if (keys == allKeys) {
-                    return steps;
-                }
-                
-                // Explore all four directions
-                for (int[] dir : dirs) {
-                    int newX = x + dir[0];
-                    int newY = y + dir[1];
-                    if (newX >= 0 && newX < m && newY >= 0 && newY < n) {
-                        char cell = grid[newX].charAt(newY);
-                        if (cell == 'W') {
-                            continue; // Cannot pass through walls
-                        } else if (cell >= 'A' && cell <= 'F' && (keys & (1 << (cell - 'A'))) == 0) {
-                            continue; // Need key to unlock the door
-                        }
-                        
-                        int newKeys = keys;
-                        if (cell >= 'a' && cell <= 'f') {
-                            newKeys |= 1 << (cell - 'a'); // Collect the key
-                        }
-                        
-                        // Add the new state to the queue if not visited
-                        String newState = newX + "," + newY + "," + newKeys;
-                        if (!visited.contains(newState)) {
-                            queue.offer(new State(newX, newY, newKeys));
-                            visited.add(newState);
+            int[] cur = queue.pollFirst();
+            int x = cur[0], y = cur[1];
+            if (grid[x][y].equals("E")) {
+                return dist[x][y];
+            }
+            for (int[] delta : DELTAS) {
+                int dx = x + delta[0], dy = y + delta[1];
+                if (isValid(grid, dist, dx, dy)) {
+                    String c = grid[dx][dy];
+                    if (c.equals("W")) {
+                        continue;
+                    }
+                    if (c.length() == 0 && Character.isLowerCase(c.charAt(0))) {
+                        keys.add(c.charAt(0));
+                    } else if (c.length() == 0 && Character.isUpperCase(c.charAt(0))) {
+                        if (!keys.contains(Character.toLowerCase(c.charAt(0)))) {
+                            continue;
                         }
                     }
+                    queue.addLast(new int[]{dx, dy});
+                    dist[dx][dy] = dist[x][y] + 2;
                 }
             }
-            steps++;
         }
-        
-        return -1; // Cannot collect all keys and reach the exit
+        return -1;
     }
-
+ 
+    private int[] findStart(String[][] grid) {
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if (grid[i][j].equals("S")) {
+                    return new int[]{i, j};
+                }
+            }
+        }
+        return new int[]{0, 0}; // Return the starting position if 'S' is not found
+    }
+ 
+    private boolean isValid(String[][] grid, int[][] dist, int x, int y) {
+        return x >= 0 && x < grid.length && y >= 0 && y < grid[0].length && dist[x][y] == Integer.MAX_VALUE;
+    }
+ 
     public static void main(String[] args) {
-        String[] grid = {"SPPPE", "WPWPW", "bPAPB"};
-        int result = shortestPathAllKeys(grid);
-        System.out.println("Minimum number of moves: " + result);
+        Q_A maze = new Q_A();
+        String[][] grid1 = {{"S","P","P","P"}, {"W","P","P","E"}, {"P","b","W","P"}, {"P","P","P","P"}};
+        int result1 = maze.shortestPath(grid1);
+        System.out.println("Shortest path to collect all keys and reach the exit: " + result1);
     }
 }
-

@@ -1,19 +1,15 @@
 package Question_7.model;
-
-import javax.swing.JOptionPane;
-
 public class RegistrationModel {
-    String username, password, fname, lname, email, gender, confirmpassword;
+    String username, password, first_name, last_name, email,confirmpassword;
           
     
-    public RegistrationModel(String username, String password, String fname, String lname, String email, String gender,String confirmpassword)
+    public RegistrationModel(String username, String password, String first_name, String last_name, String email, String confirmpassword)
     {
         this.username=username;
         this.password=password;
-        this.fname=fname;
-        this.lname=lname;
+        this.first_name=first_name;
+        this.last_name=last_name;
         this.email=email;
-        this.gender=gender;
         this.confirmpassword=confirmpassword;
         
     } 
@@ -34,20 +30,20 @@ public class RegistrationModel {
         this.password = password;
     }
 
-    public String getFname() {
-        return fname;
+    public String getFirst_name() {
+        return first_name;
     }
 
-    public void setFname(String fname) {
-        this.fname = fname;
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
     }
 
-    public String getLname() {
-        return lname;
+    public String getLast_name() {
+        return last_name;
     }
 
-    public void setLname(String lname) {
-        this.lname = lname;
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
     public String getEmail() {
@@ -56,14 +52,6 @@ public class RegistrationModel {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
     }
     
     public String getconfirmPassword() {
